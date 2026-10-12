@@ -3,10 +3,18 @@
 # Ce fichier est lu depuis la branche par défaut (main), donc il s'applique à
 # toutes les pull requests, même celles dont la branche est antérieure.
 
+[config]
+# Les commentaires en ligne sont mis à jour à chaque revue, au lieu d'être
+# repostés en doublon.
+persistent_inline_comments = true
+
 [pr_reviewer]
 # Pose chaque constat de revue en commentaire en ligne sur le diff, en plus du
 # résumé. Même comportement que le réviseur ai-review.
 inline_key_issues = true
+
+# Plafond des constats remontés (consigne du prompt, défaut 3).
+num_max_findings = 6
 
 # Étiquettes de revue : « Review effort x/5 » et « Possible security concern ».
 enable_review_labels_effort = true
