@@ -29,6 +29,7 @@ declare -A TITLES=(
   [feat/pagination]="feat: pagination de la liste des tâches"
   [refactor/task-service]="refactor: extraire la logique des tâches dans un service"
   [feat/task-stats]="feat: statistiques des tâches"
+  [feat/analytics-reports]="feat: rapports et export des tâches"
 )
 BRANCHES=("${!TITLES[@]}")
 

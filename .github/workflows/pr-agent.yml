@@ -43,6 +43,10 @@ jobs:
           config.fallback_models: '["openai/qwen3.8-27b"]'
           config.custom_model_max_tokens: "32768"
 
+          # Labels de revue : "Review effort x/5" et "Possible security concern".
+          config.pr_reviewer.enable_review_labels_effort: "true"
+          config.pr_reviewer.enable_review_labels_security: "true"
+
           # Only the review tool runs automatically. The pull request body is preserved.
           github_action_config.pr_actions: '["labeled"]'
           github_action_config.auto_review: "true"
