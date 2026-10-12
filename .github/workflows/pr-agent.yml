@@ -1,0 +1,49 @@
+# Reviewer: The-PR-Agent/pr-agent
+#
+# This file is shared by both demo repositories. The guard on `github.repository`
+# keeps the job active only in demo-pr-agent. In demo-ai-review the job is skipped.
+#
+# The review starts when the label `ready-for-llm-review` is added to a pull request.
+# A pull request comment that starts with `/review` also starts a review.
+
+name: PR Agent
+
+on:
+  pull_request:
+    types: [labeled]
+  issue_comment:
+    types: [created]
+
+jobs:
+  pr-agent:
+    if: >
+      github.repository == 'Baboulinet-33/demo-pr-agent' &&
+      github.event.sender.type != 'Bot' &&
+      ((github.event_name == 'pull_request' &&
+        github.event.label.name == 'ready-for-llm-review') ||
+       (github.event_name == 'issue_comment' &&
+        github.event.issue.pull_request != null &&
+        startsWith(github.event.comment.body, '/review')))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Run PR Agent
+        uses: the-pr-agent/pr-agent@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+          # LLM: Scaleway Generative APIs (OpenAI-compatible)
+          OPENAI__API_BASE: "https://api.scaleway.ai/v1"
+          OPENAI__KEY: ${{ secrets.SCW_SECRET_KEY }}
+          config.model: "openai/mistral-small-3.2-24b-instruct-2506"
+          config.fallback_models: '["openai/mistral-small-3.2-24b-instruct-2506"]'
+          config.custom_model_max_tokens: "32000"
+
+          # Only the review tool runs automatically. The pull request body is preserved.
+          github_action_config.pr_actions: '["labeled"]'
+          github_action_config.auto_review: "true"
+          github_action_config.auto_describe: "false"
+          github_action_config.auto_improve: "false"
