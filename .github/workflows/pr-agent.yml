@@ -47,6 +47,9 @@ jobs:
           config.pr_reviewer.enable_review_labels_effort: "true"
           config.pr_reviewer.enable_review_labels_security: "true"
 
+          # Pose chaque constat en commentaire en ligne sur le diff, en plus du résumé.
+          config.pr_reviewer.inline_key_issues: "true"
+
           # Only the review tool runs automatically. The pull request body is preserved.
           github_action_config.pr_actions: '["labeled"]'
           github_action_config.auto_review: "true"
