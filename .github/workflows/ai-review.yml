@@ -56,3 +56,9 @@ jobs:
 
           # Review options
           REVIEW__MODE: "FULL_FILE_DIFF"
+
+          # Added and removed lines already carry a "+" or "-" prefix.
+          # Disable the default text markers (" # added" / " # removed"):
+          # the model read them as real code comments and asked to remove them.
+          REVIEW__REVIEW_ADDED_MARKER: ""
+          REVIEW__REVIEW_REMOVED_MARKER: ""
