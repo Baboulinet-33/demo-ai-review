@@ -16,6 +16,12 @@ inline_key_issues = true
 # Plafond des constats remontés (consigne du prompt, défaut 3).
 num_max_findings = 6
 
+# Consigne de performance. Elle corrige l'angle mort constaté sur la PR 8 :
+# sans elle, le coût O(m × n) de `bulk_create` est signalé 2 fois sur 15.
+# La parité avec ai-review est rompue volontairement : ai-review ne reçoit pas
+# cette consigne. Détail des essais dans `essais-pr-agent.md`.
+extra_instructions = "Also review algorithmic cost. Flag a repeated full scan of a shared collection, a nested loop, or a full copy at each iteration. State the cost of the new code and compare it with the cost before the pull request."
+
 # Étiquettes de revue : « Review effort x/5 » et « Possible security concern ».
 enable_review_labels_effort = true
 enable_review_labels_security = true
