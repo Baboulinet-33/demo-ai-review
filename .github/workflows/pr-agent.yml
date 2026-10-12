@@ -44,11 +44,11 @@ jobs:
           config.custom_model_max_tokens: "32768"
 
           # Labels de revue : "Review effort x/5" et "Possible security concern".
-          config.pr_reviewer.enable_review_labels_effort: "true"
-          config.pr_reviewer.enable_review_labels_security: "true"
+          pr_reviewer.enable_review_labels_effort: "true"
+          pr_reviewer.enable_review_labels_security: "true"
 
           # Pose chaque constat en commentaire en ligne sur le diff, en plus du résumé.
-          config.pr_reviewer.inline_key_issues: "true"
+          pr_reviewer.inline_key_issues: "true"
 
           # Only the review tool runs automatically. The pull request body is preserved.
           github_action_config.pr_actions: '["labeled"]'
