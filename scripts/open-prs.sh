@@ -59,6 +59,14 @@ ensure_label() {
     --description "Demande une revue LLM du pull request" || true
 }
 
+add_label() {
+  local repo="$1" branch="$2"
+  local pr_num
+  pr_num="$(gh pr view "$branch" --repo "$OWNER/$repo" --json number --jq .number)" || return 0
+  run gh api -X POST "repos/$OWNER/$repo/issues/$pr_num/labels" -f "labels[]=$LABEL" >/dev/null || \
+    echo "  label non posé sur $branch (PR #$pr_num)"
+}
+
 open_one_repo() {
   local repo="$1"
   local remote="$2"
@@ -77,7 +85,7 @@ open_one_repo() {
     else
       echo "  PR déjà ouverte ou échec : $branch"
     fi
-    run gh pr edit "$branch" --repo "$OWNER/$repo" --add-label "$LABEL" || true
+    add_label "$repo" "$branch"
   done
 }
 
