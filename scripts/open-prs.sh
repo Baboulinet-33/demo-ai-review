@@ -45,7 +45,7 @@ run() {
 
 ensure_repo() {
   local repo="$1"
-  if ! run gh api -X PUT "repos/$OWNER/$repo/actions/permissions" -f enabled=true >/dev/null; then
+  if ! run gh api -X PUT "repos/$OWNER/$repo/actions/permissions" -F enabled=true >/dev/null; then
     echo "attention: impossible d'activer Actions sur $repo"
   fi
   if ! run gh api -X PUT "repos/$OWNER/$repo/actions/permissions/workflow" -f default_workflow_permissions=write >/dev/null; then
@@ -73,10 +73,11 @@ open_one_repo() {
     run git push "$remote" "$branch:$branch"
     if run gh pr create --repo "$OWNER/$repo" --base main --head "$branch" \
       --title "$title" --body-file "$body"; then
-      run gh pr edit "$branch" --repo "$OWNER/$repo" --add-label "$LABEL"
+      :
     else
       echo "  PR déjà ouverte ou échec : $branch"
     fi
+    run gh pr edit "$branch" --repo "$OWNER/$repo" --add-label "$LABEL" || true
   done
 }
 
