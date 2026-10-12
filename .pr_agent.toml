@@ -1,0 +1,13 @@
+# Réglages du dépôt lus par PR-Agent pour chaque revue.
+#
+# Ce fichier est lu depuis la branche par défaut (main), donc il s'applique à
+# toutes les pull requests, même celles dont la branche est antérieure.
+
+[pr_reviewer]
+# Pose chaque constat de revue en commentaire en ligne sur le diff, en plus du
+# résumé. Même comportement que le réviseur ai-review.
+inline_key_issues = true
+
+# Étiquettes de revue : « Review effort x/5 » et « Possible security concern ».
+enable_review_labels_effort = true
+enable_review_labels_security = true
