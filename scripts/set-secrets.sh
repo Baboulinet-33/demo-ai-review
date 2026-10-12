@@ -10,7 +10,10 @@
 set -euo pipefail
 
 OWNER="Baboulinet-33"
-: "${SCW_SECRET_KEY:?Définissez SCW_SECRET_KEY dans l'environnement}"
+if [[ -z "${SCW_SECRET_KEY:-}" ]]; then
+  echo "Erreur : définissez SCW_SECRET_KEY dans l'environnement (export SCW_SECRET_KEY=clé_scaleway)." >&2
+  exit 1
+fi
 
 for repo in demo-ai-review demo-pr-agent; do
   echo "==> $repo"
