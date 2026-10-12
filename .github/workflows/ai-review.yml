@@ -40,10 +40,10 @@ jobs:
         env:
           # LLM: Scaleway Generative APIs (OpenAI-compatible)
           LLM__PROVIDER: "OPENAI"
-          LLM__META__MODEL: "mistral-small-3.2-24b-instruct-2506"
+          LLM__META__MODEL: "qwen3.8-27b"
           LLM__META__MAX_TOKENS: "15000"
           LLM__META__TEMPERATURE: "0.3"
-          LLM__HTTP_CLIENT__API_URL: "https://api.scaleway.ai/v1"
+          LLM__HTTP_CLIENT__API_URL: "https://api.scaleway.ai/2b40a887-f3bf-4b0e-ad3e-97fbefe8541c/v1"
           LLM__HTTP_CLIENT__API_TOKEN: ${{ secrets.SCW_SECRET_KEY }}
 
           # GitHub integration

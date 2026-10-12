@@ -37,11 +37,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
           # LLM: Scaleway Generative APIs (OpenAI-compatible)
-          OPENAI__API_BASE: "https://api.scaleway.ai/v1"
+          OPENAI__API_BASE: "https://api.scaleway.ai/2b40a887-f3bf-4b0e-ad3e-97fbefe8541c/v1"
           OPENAI__KEY: ${{ secrets.SCW_SECRET_KEY }}
-          config.model: "openai/mistral-small-3.2-24b-instruct-2506"
-          config.fallback_models: '["openai/mistral-small-3.2-24b-instruct-2506"]'
-          config.custom_model_max_tokens: "32000"
+          config.model: "openai/qwen3.8-27b"
+          config.fallback_models: '["openai/qwen3.8-27b"]'
+          config.custom_model_max_tokens: "32768"
 
           # Only the review tool runs automatically. The pull request body is preserved.
           github_action_config.pr_actions: '["labeled"]'
