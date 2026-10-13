@@ -43,7 +43,12 @@ jobs:
           # le code de la pull request. Sans ce `ref`, workflow_dispatch laisse le
           # checkout sur la branche par defaut (main) : le modele lit alors
           # l'ancienne version des fichiers et signale de faux defauts.
-          ref: refs/pull/${{ github.event.pull_request.number || inputs.pull-request-number }}/head
+          #
+          # Le commit de fusion, et non la tete de branche : il porte le code de
+          # la PR ET la configuration de `main` (`.ai-review.yaml`, consigne de
+          # performance, marqueurs desactives). La tete de branche n'a pas ces
+          # fichiers, car les branches datent d'avant.
+          ref: refs/pull/${{ github.event.pull_request.number || inputs.pull-request-number }}/merge
 
       - name: Run AI Review (agent mode)
         uses: Nikita-Filonov/ai-review@v1.4.0
