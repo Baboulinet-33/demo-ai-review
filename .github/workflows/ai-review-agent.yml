@@ -39,6 +39,11 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          # En mode agent, le modele lit les fichiers sur le disque. Il faut donc
+          # le code de la pull request. Sans ce `ref`, workflow_dispatch laisse le
+          # checkout sur la branche par defaut (main) : le modele lit alors
+          # l'ancienne version des fichiers et signale de faux defauts.
+          ref: refs/pull/${{ github.event.pull_request.number || inputs.pull-request-number }}/head
 
       - name: Run AI Review (agent mode)
         uses: Nikita-Filonov/ai-review@v1.4.0
@@ -70,3 +75,6 @@ jobs:
           # Mode agent. Defauts de l'outil : 25 iterations au plus, 40 000
           # caracteres de contexte, commandes ls / cat / grep / git.
           AGENT__ENABLED: "true"
+
+          # Trace les commandes de l'agent. A retirer quand l'essai est fini.
+          LOGGER__LEVEL: "DEBUG"
