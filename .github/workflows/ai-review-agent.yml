@@ -84,6 +84,13 @@ jobs:
           REVIEW__REVIEW_ADDED_MARKER: ""
           REVIEW__REVIEW_REMOVED_MARKER: ""
 
+          # GitHub bloque la creation de contenu quand le client poste en
+          # parallele (limite secondaire). ai-review poste jusqu'a
+          # `core.concurrency` commentaires a la fois. On serialise, pour que
+          # aucun commentaire ne soit perdu. Cela serialise aussi les boucles
+          # de l'agent, fichier par fichier.
+          CORE__CONCURRENCY: "1"
+
           # Mode agent. Defauts de l'outil : 25 iterations au plus, 40 000
           # caracteres de contexte, commandes ls / cat / grep / git.
           AGENT__ENABLED: "true"
