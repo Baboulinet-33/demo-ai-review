@@ -24,6 +24,13 @@ on:
         required: true
         type: string
 
+# Une passe du banc declenche neuf revues en parallele. GitHub limite alors la
+# creation de contenu et repond 403 : ai-review abandonne le commentaire, et le
+# job reste vert. On serialise donc les executions : une seule poste a la fois.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.repository }}
+  queue: max
+
 jobs:
   ai-review-agent:
     if: >

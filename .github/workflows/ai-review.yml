@@ -17,6 +17,13 @@ on:
         required: true
         type: string
 
+# A benchmark round dispatches nine reviews in parallel. GitHub then throttles
+# content creation and answers 403: ai-review drops the comment and the job
+# still succeeds. Serialize the runs instead, so only one posts at a time.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.repository }}
+  queue: max
+
 jobs:
   ai-review:
     if: >
