@@ -1,0 +1,72 @@
+# Reviewer: Nikita-Filonov/ai-review, en mode agent.
+#
+# Jumeau de `ai-review.yml`. Seule difference de fond : `AGENT__ENABLED`.
+# Le garde sur `github.repository` limite ce job au depot demo-ai-review-agent.
+# Dans les deux autres depots le job est ignore.
+#
+# En mode agent, le modele boucle avant de repondre. A chaque iteration il rend
+# soit {"action": "TOOL_CALL", "command": "..."}, soit
+# {"action": "FINAL", "content": "..."}. Il peut donc lire le depot avec
+# ls, cat, grep et git (status, show, diff, log, rev-parse, ls-files).
+#
+# La revue demarre quand l'etiquette `ready-for-llm-review` est posee sur une
+# pull request, ou a la demande par workflow_dispatch.
+
+name: AI Review Agent
+
+on:
+  pull_request:
+    types: [labeled]
+  workflow_dispatch:
+    inputs:
+      pull-request-number:
+        description: "Pull request number to review"
+        required: true
+        type: string
+
+jobs:
+  ai-review-agent:
+    if: >
+      github.repository == 'Baboulinet-33/demo-ai-review-agent' &&
+      (github.event_name == 'workflow_dispatch' ||
+       github.event.label.name == 'ready-for-llm-review')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run AI Review (agent mode)
+        uses: Nikita-Filonov/ai-review@v1.4.0
+        with:
+          review-command: run
+        env:
+          # LLM: Scaleway Generative APIs (OpenAI-compatible)
+          LLM__PROVIDER: "OPENAI"
+          LLM__META__MODEL: "qwen3.8-27b"
+          LLM__META__MAX_TOKENS: "15000"
+          LLM__META__TEMPERATURE: "0.3"
+          LLM__HTTP_CLIENT__API_URL: "https://api.scaleway.ai/2b40a887-f3bf-4b0e-ad3e-97fbefe8541c/v1"
+          LLM__HTTP_CLIENT__API_TOKEN: ${{ secrets.SCW_SECRET_KEY }}
+
+          # GitHub integration
+          VCS__PROVIDER: "GITHUB"
+          VCS__PIPELINE__OWNER: ${{ github.repository_owner }}
+          VCS__PIPELINE__REPO: ${{ github.event.repository.name }}
+          VCS__PIPELINE__PULL_NUMBER: ${{ github.event.pull_request.number || inputs.pull-request-number }}
+          VCS__HTTP_CLIENT__API_URL: "https://api.github.com"
+          VCS__HTTP_CLIENT__API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+          # Review options. Identiques a ai-review.yml, pour isoler la variable
+          # "mode agent" dans la comparaison.
+          REVIEW__MODE: "FULL_FILE_DIFF"
+          REVIEW__REVIEW_ADDED_MARKER: ""
+          REVIEW__REVIEW_REMOVED_MARKER: ""
+
+          # Mode agent. Defauts de l'outil : 25 iterations au plus, 40 000
+          # caracteres de contexte, commandes ls / cat / grep / git.
+          AGENT__ENABLED: "true"
