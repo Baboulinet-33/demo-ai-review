@@ -69,3 +69,9 @@ jobs:
           # the model read them as real code comments and asked to remove them.
           REVIEW__REVIEW_ADDED_MARKER: ""
           REVIEW__REVIEW_REMOVED_MARKER: ""
+
+          # GitHub's secondary rate limit blocks content creation when a client
+          # posts concurrently. ai-review posts up to `core.concurrency`
+          # comments at once. Serialize, so no comment is dropped. This also
+          # serializes the per-file LLM calls.
+          CORE__CONCURRENCY: "1"
